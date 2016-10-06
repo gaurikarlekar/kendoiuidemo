@@ -1,0 +1,101 @@
+﻿
+@*@{
+    ViewBag.Title = "Grid Demo";
+}
+
+<h2>Grid Demo</h2>
+
+@(Html.Kendo().Grid((IEnumerable<KendoUIAppScheduler.Models.TaskViewModel>)ViewBag.stud) //Bind the grid to ViewBag.Products
+      .Name("grid")
+      .Columns(columns =>
+      {
+          // Create a column bound to the ProductID propertyk
+          columns.Bound(stud => stud.TaskID);
+          // Create a column bound to the ProductName property
+          columns.Bound(stud => stud.Title);
+          // Create a column bound to the UnitsInStock property
+          columns.Bound(stud => stud.Description);
+          // Create a column bound to the UnitsInStock property
+          columns.Bound(stud => stud.IsAllDay);
+          // Create a column bound to the UnitsInStock property
+          columns.Bound(stud => stud.Start);
+          // Create a column bound to the UnitsInStock property
+          columns.Bound(stud => stud.End);
+      })
+      .Pageable() // Enable paging
+      .Sortable() // Enable sorting
+)*@
+
+@Scripts.Render("~/bundles/2016.1.112/jquery")
+@Scripts.Render("~/bundles/2016.1.112/kendo")
+
+@{
+    ViewBag.Title = "About";
+}
+
+<hgroup class="title">
+    @*<h1>@ViewBag.Title.</h1>*@
+    @*<h2>@ViewBag.Message</h2>*@
+    <h3>Telerik/Kendo UI Demo For Grid</h3>
+</hgroup>
+
+<script>
+    $(function () {
+        $("#links-treeview").kendoTreeView();
+    });
+</script>
+
+
+@(Html.Kendo().Grid((IEnumerable<KendoUIAppScheduler.Models.Student>)ViewBag.Students)
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.StudentName).Width(130);
+            columns.Bound(c => c.CourseName).Width(130);
+            columns.Bound(c => c.City).Width(100);//.Filterable(filterable => filterable.UI("cityFilter"));
+            columns.Bound(c => c.Country).Width(100);
+            columns.Bound(c => c.Email).Width(200);
+            columns.Bound(c => c.Score).Width(80);
+            columns.Bound(c => c.CourseProgress).Width(200);
+        })
+        .Pageable() // Enable paging
+        .Sortable() // Enable sorting
+        .Filterable(filterable => filterable
+        .Extra(false)
+        .Operators(operators => operators
+            .ForString(str => str.Clear()
+                .StartsWith("Starts with")
+                .IsEqualTo("Is equal to")
+                .IsNotEqualTo("Is not equal to")
+            ))
+        )
+        //.DataSource(dataSource => dataSource
+        //    .Ajax()
+        //    .Read(read => read.Action("FilterMenuCustomization_Read", "Grid"))
+        //)
+        .HtmlAttributes(new { style = "width: 1000px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        //.DataSource(dataSource => dataSource
+        //    .Ajax()
+        //    .Read(read => read.Action("Customers_Read", "Home"))
+        //    .PageSize(20)
+        //    .ServerOperation(false)
+        //)
+)
+<script>
+    $(function () {
+        // Notice that the Name() of the grid is used to get its client-side instance
+        var grid = $("#grid").data("kendoGrid");
+    });
+</script>
+
+<br /><br /><br /><br /><br /><br /><br /><br />
+
+
+

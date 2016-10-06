@@ -1,0 +1,223 @@
+﻿using KendoUIAppScheduler.Models;
+using Kendo.Mvc.UI;
+using Kendo.Mvc.Extensions;
+//using Kendo.DynamicLinq;
+
+using System.Data.Entity;
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+
+namespace KendoUIAppScheduler.Controllers
+{
+    public class HomeController : Controller
+    {
+        SampleEntities em = new SampleEntities();
+
+        public ActionResult Index()
+        {
+            ViewBag.Message = "Welcome to ASP.NET MVC!";
+
+            return View();
+        }
+
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your app description page.";
+
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+
+        // for pie chart
+
+        public ActionResult PieChart()
+        {
+            //SampleEntities em = new SampleEntities();
+            //var data = from p in em.Students
+            //           select p;
+            //ViewBag.stud = data;
+            return View();
+        }
+        public ActionResult PieChartSubject()
+        {
+            ////SampleEntities em = new SampleEntities();
+            //var data = from p in em.Students
+            //           select p;
+            //ViewBag.stud = data;
+            return View();
+        }
+
+        public ActionResult Grid()
+        {
+            ////SampleEntities em = new SampleEntities();
+            //var data = from p in em.Tasks
+            //           select p;
+            //ViewBag.stud = data;
+            //return View();
+            ViewBag.Message = "Your app description page.";
+            var entity = new SampleEntities();
+            ViewBag.Students = entity.Students;
+            return View();
+        }
+
+        public ActionResult Slider()
+        {
+            ViewBag.Message = "Welcome to ASP.NET MVC!";
+
+            return View();
+        }
+        /*
+         * Read the Task to be rendered using view.
+         * This demo version code version uses SampleEntities as Model 
+         * */
+        public ActionResult Tasks_Read([DataSourceRequest]DataSourceRequest request)
+        {
+           
+            using (var sampleDB = new SampleEntities())
+            {
+
+                IQueryable<TaskViewModel> tasks = sampleDB.Tasks.ToList().Select(task => new TaskViewModel()
+                {
+                    TaskID = task.TaskID,
+                    Title = task.Title,
+                    //Specify the DateTimeKind to be UTC   
+                    Start = DateTime.SpecifyKind(Convert.ToDateTime(task.Start),DateTimeKind.Utc),
+                    End = DateTime.SpecifyKind(Convert.ToDateTime(task.End), DateTimeKind.Utc),
+
+                    ////Start =  //Convert.ToDateTime(task.Start), //DateTime.Now, //DateTime.SpecifyKind(task.Start, DateTimeKind.Utc),
+                    ////End = Convert.ToDateTime(task.End) ,//DateTime.Now, //DateTime.SpecifyKind(task.End, DateTimeKind.Utc),
+
+                    Description = task.Description,
+                    IsAllDay =Convert.ToBoolean(task.IsAllDay),
+                    RecurrenceRule = task.RecurrenceRule,
+                    RecurrenceException = task.RecurrenceException,
+                    RecurrenceID = task.RecurrenceID,
+                    OwnerID = task.OwnerID
+                }).AsQueryable();
+
+                ////return Json(tasks.ToDataSourceResult(request));
+                return Json(tasks.ToDataSourceResult(request));
+            }
+        }
+        /*
+         * Create the Task to be scheduled.
+         * This demo version code version writes to Tas entity
+         * */
+        public ActionResult Tasks_Create([DataSourceRequest]DataSourceRequest request, TaskViewModel task)
+        {
+
+            if (ModelState.IsValid)
+            {
+                using (var sampleDB = new SampleEntities())
+                {
+                    //Create a new Task entity and set its properties from the posted TaskViewModel
+                    var entity = new Task
+                    {
+                        //TaskID = task.TaskID,
+                        Title = task.Title,
+                        Start = task.Start,
+                        End = task.End,
+                        Description = task.Description,
+                        RecurrenceRule = task.RecurrenceRule,
+                        RecurrenceException = task.RecurrenceException,
+                        RecurrenceID = task.RecurrenceID,
+                        IsAllDay = task.IsAllDay,
+                        OwnerID = task.OwnerID
+                    };
+
+                    // Add the entity
+                    sampleDB.Tasks.Add(entity);
+                    //sampleDB.Tasks.AddObject(entity);
+                    // Insert the entity in the database
+                    sampleDB.SaveChanges();
+                    // Get the TaskID generated by the database
+                    task.TaskID = entity.TaskID;
+                }
+            }
+            // Return the inserted task. The scheduler needs the generated TaskID. Also return any validation errors.
+            return Json(new[] { task }.ToDataSourceResult(request, ModelState));
+        
+         /*
+         * Delete the Task to be scheduled.
+         * This demo version code version delete from SampleEntities
+         * */
+        public ActionResult Tasks_Update([DataSourceRequest]DataSourceRequest request, TaskViewModel task)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var sampleDB = new SampleEntities())
+                {
+                    // Create a new Task entity and set its properties from the posted TaskViewModel
+                    var entity = new Task
+                    {
+                        TaskID = task.TaskID,
+                        Title = task.Title,
+                        Start = task.Start,
+                        End = task.End,
+                        Description = task.Description,
+                        RecurrenceRule = task.RecurrenceRule,
+                        RecurrenceException = task.RecurrenceException,
+                        RecurrenceID = task.RecurrenceID,
+                        IsAllDay = task.IsAllDay,
+                        OwnerID = task.OwnerID
+                    };
+                    // Attach the entity
+                    sampleDB.Tasks.Attach(entity);
+                    // Change its state to Modified so Entity Framework can update the existing task instead of creating a new one
+                    sampleDB.Entry(entity).State = EntityState.Modified;
+                    // Or use ObjectStateManager if using a previous version of Entity Framework
+                    //sampleDB.ObjectStateManager.ChangeObjectState(entity, EntityState.Modified);
+                    // Update the entity in the database
+                    sampleDB.SaveChanges();
+                }
+            }
+            // Return the updated task. Also return any validation errors.
+            return Json(new[] { task }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult Tasks_Destroy([DataSourceRequest]DataSourceRequest request, TaskViewModel task)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var sampleDB = new SampleEntities())
+                {
+                    // Create a new Task entity and set its properties from the posted TaskViewModel
+                    var entity = new Task
+                    {
+                        TaskID = task.TaskID,
+                        Title = task.Title,
+                        Start = task.Start,
+                        End = task.End,
+                        Description = task.Description,
+                        RecurrenceRule = task.RecurrenceRule,
+                        RecurrenceException = task.RecurrenceException,
+                        RecurrenceID = task.RecurrenceID,
+                        IsAllDay = task.IsAllDay,
+                        OwnerID = task.OwnerID
+                    };
+                    // Attach the entity
+                    sampleDB.Tasks.Attach(entity);
+                    // Delete the entity
+                    sampleDB.Tasks.Remove(entity);
+                    // Or use DeleteObject if using a previous versoin of Entity Framework
+                    //sampleDB.Tasks.DeleteObject(entity);
+                    // Delete the entity in the database
+                    sampleDB.SaveChanges();
+                }
+            }
+            // Return the removed task. Also return any validation errors.
+            return Json(new[] { task }.ToDataSourceResult(request, ModelState));
+        }
+    }
+}

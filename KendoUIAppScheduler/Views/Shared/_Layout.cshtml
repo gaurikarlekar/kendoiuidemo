@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        @Styles.Render("~/Content/kendo/css")
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/kendo")
+
+
+        <title>Demo :: Telerik/Kendo UI MVC Application</title>
+        <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    	<link href="@Url.Content("~/Content/kendo/2016.1.112/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.1.112/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.1.112/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.1.112/kendo.default.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.1.112/kendo.dataviz.default.min.css")" rel="stylesheet" type="text/css" />
+	<script src="@Url.Content("~/Scripts/kendo/2016.1.112/jquery.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.1.112/angular.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.1.112/jszip.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.1.112/kendo.all.min.js")"></script>
+</head>
+    <body>
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("Telerik/Kendo UI Demo ", "Index", "Home")</p>
+                </div>
+                <div class="float-right">
+                    <nav>
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Scheduler Demo", "Index", "Home")</li>
+                            @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
+                            <li>@Html.ActionLink("TabStrip Demo", "Contact", "Home")</li>
+                            <li>@Html.ActionLink("Grid Demo", "Grid", "Home")</li>
+                            <li>@Html.ActionLink("Charts Demo 1", "PieChart", "Home")</li>
+                            <li>@Html.ActionLink("Charts Demo 2", "PieChartSubject", "Home")</li>
+                            <li>@Html.ActionLink("Slider Demo", "Slider", "Home")</li>
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>        
+        <div id="body">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+
+        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p>&copy; @DateTime.Now.Year - Telerik/Kendo UI Demo</p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

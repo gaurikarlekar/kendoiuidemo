@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "PieChart";
+}
+
+<h3>Telerik/Kendo UI Demo For PieChart (Techonology Distribution Across Students)</h3>
+
+<div class="demo-section k-content wide">
+    @(Html.Kendo().Chart()
+        .Name("chart")
+                .Title(title => title
+                                            .Text("Techonology Distribution Across Students, 2014 - 2015")
+                    .Position(ChartTitlePosition.Bottom))
+        .Legend(legend => legend
+            .Visible(false)
+        )
+        .ChartArea(chart => chart
+            .Background("transparent")
+         )
+                .HtmlAttributes(new { style = "background: center no-repeat url(" + @Url.Content("~/Content/shared/world_map_06.jpg")})
+        .Series(series =>
+        {
+            
+            series.Pie(new dynamic[] {
+                new {category="PMP",value=20,color="#9de219"},
+                new {category="C#.NET",value=20,color="#90cc38"},
+                new {category="	ASP.NET",value=20,color="#068c35"},
+                new {category="	C++",value=10,color="#006634"},
+                new {category="Azure",value=20,color="lightgreen"},
+                new {category="Python",value=10,color="lightblue"}               
+                                
+            })
+            .Labels(labels => labels
+                .Template("#= category #: \n #= value#%")
+                .Background("transparent")
+                .Visible(true)
+            )
+            .StartAngle(150);
+        })
+        .Tooltip(tooltip => tooltip
+            .Visible(true)
+            .Format("{0}%")
+        )
+    )
+</div>
+<br /><br /><br /><br />
+
